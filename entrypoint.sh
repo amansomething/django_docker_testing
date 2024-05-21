@@ -3,14 +3,22 @@
 # Function to generate a 64-character password. Newline, $, and = characters are removed.
 generate_password() {
   var_name=$1
-  echo "$var_name=$(openssl rand -base64 64 | tr -d '\n$=' | cut -c -64)"
+  echo "$var_name=\"$(openssl rand -base64 64 | tr -d '\n$=' | cut -c -64)\""
 }
 
 # List of required password variables
-required_pw_vars=("DJANGO_SECRET_KEY" "ANOTHER_SECRET_KEY" "YET_ANOTHER_SECRET_KEY")
+required_pw_vars=(\
+"DJANGO_SECRET_KEY" \
+"ANOTHER_SECRET_KEY" \
+"YET_ANOTHER_SECRET_KEY"\
+)
 
 # List of other required variables
-required_vars=("DATABASE_URL" "REDIS_URL" "SOME_OTHER_VAR")
+required_vars=(\
+"DATABASE_URL" \
+"REDIS_URL" \
+"SOME_OTHER_VAR"\
+)
 
 # Create .env file if it doesn't exist
 if [ ! -f .env ]; then
