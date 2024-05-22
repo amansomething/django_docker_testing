@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Function to generate a 64-character password. Newline, $, and = characters are removed.
+# The result is enclosed in double quotes.
 generate_password() {
   var_name=$1
   echo "$var_name=\"$(openssl rand -base64 64 | tr -d '\n$=' | cut -c -64)\""
