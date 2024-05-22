@@ -9,23 +9,20 @@ generate_password() {
 
 # List of required password variables
 required_pw_vars=(\
-"DJANGO_SECRET_KEY" \
-"ANOTHER_SECRET_KEY" \
-"YET_ANOTHER_SECRET_KEY"\
+"DJANGO_SECRET_KEY"
+"ANOTHER_SECRET_KEY"
+"YET_ANOTHER_SECRET_KEY"
 )
 
 # List of other required variables
-required_vars=(\
-"DATABASE_URL" \
-"REDIS_URL" \
-"SOME_OTHER_VAR"\
+required_vars=(
+"DATABASE_URL"
+"REDIS_URL"
+"SOME_OTHER_VAR"
 )
 
 # Create .env file if it doesn't exist
-if [ ! -f .env ]; then
-  echo ".env file not found. Creating a new one."
-  touch .env
-fi
+touch .env
 
 # Check and generate required password variables if not already present
 for var in "${required_pw_vars[@]}"; do
