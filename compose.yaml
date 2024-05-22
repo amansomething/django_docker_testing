@@ -10,7 +10,7 @@
 services:
   server:
     build: .
-    entrypoint: ["/bin/bash", "/app/entrypoint.sh"]
+    entrypoint: ["python", "/app/entrypoint.py"]
     volumes:
       - .:/app
     env_file:
