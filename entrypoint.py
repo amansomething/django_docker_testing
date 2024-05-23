@@ -1,5 +1,3 @@
-# TODO: Check that required vars aren't empty and a reasonable length.
-
 import os
 import secrets
 import string
