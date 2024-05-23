@@ -1,3 +1,6 @@
+# TODO: Use dotenv to handle reading the .env file.
+# TODO: Check that required vars aren't empty and a reasonable length.
+
 import os
 import secrets
 import string
@@ -35,7 +38,7 @@ def create_env_file(env_file: str = ".env") -> None:
 
 def read_env_file(env_file: str = ".env") -> str:
     """
-    Read the contents of a .env file and return it as a string.
+    Reads the contents of a .env file and returns it as a string.
     Uses the create_env_file function to create the .env file if it does not exist.
 
     :param env_file: Name of the .env file. Default = ".env"
@@ -95,7 +98,7 @@ def check_other_required_vars(env_vars: str, required_vars: tuple) -> None:
         sys.exit(1)
 
 
-def main():
+if __name__ == "__main__":
     required_pw_vars = (
         "DJANGO_SECRET_KEY",
         "ANOTHER_SECRET_KEY",
@@ -110,7 +113,3 @@ def main():
     env_vars = read_env_file()
     check_pw_vars(env_vars, required_pw_vars)
     check_other_required_vars(env_vars, required_vars)
-
-
-if __name__ == "__main__":
-    main()
