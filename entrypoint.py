@@ -98,7 +98,7 @@ def check_other_required_vars(env_vars: str, required_vars: tuple) -> None:
         sys.exit(1)
 
 
-if __name__ == "__main__":
+def main():
     required_pw_vars = (
         "DJANGO_SECRET_KEY",
         "ANOTHER_SECRET_KEY",
@@ -113,3 +113,7 @@ if __name__ == "__main__":
     env_vars = read_env_file()
     check_pw_vars(env_vars, required_pw_vars)
     check_other_required_vars(env_vars, required_vars)
+
+
+if __name__ == "__main__":
+    main()
