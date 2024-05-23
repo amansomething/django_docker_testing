@@ -1,10 +1,13 @@
-# TODO: Use dotenv to handle reading the .env file.
 # TODO: Check that required vars aren't empty and a reasonable length.
 
 import os
 import secrets
 import string
 import sys
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def generate_password(length: int = 64, special_chars: str = "!@#^*()") -> str:
@@ -16,86 +19,77 @@ def generate_password(length: int = 64, special_chars: str = "!@#^*()") -> str:
     :return: A random password of the specified length.
     """
     alphabet = string.ascii_letters + string.digits + special_chars
-    password = "".join(secrets.choice(alphabet) for i in range(length))
+    password = "".join(secrets.choice(alphabet) for _ in range(length))
 
     return password
 
 
-def create_env_file(env_file: str = ".env") -> None:
+def check_missing_vars(vars_: tuple[str, ...]) -> list[str]:
     """
-    Creates a .env file if it does not already exist.
+    Checks if given variables are available.
+    If not, print a list of missing variables.
 
-    :param env_file: The name of the .env file. Default = ".env"
-    :return: None
+    :param vars_: Tuple of required variables.
+    :return: List of missing variables.
     """
-    if not os.path.exists(env_file):
-        print(f"Creating {env_file}...")
-        with open(env_file, "w") as f:
-            f.write("")
-    else:
-        print(f"{env_file} already exists.")
+    missing_vars = [var for var in vars_ if var not in os.environ]
+
+    if missing_vars:
+        print("The following required variables are missing:")
+        for var in missing_vars:
+            print(f"\t- {var}")
+        print()
+
+    return missing_vars
 
 
-def read_env_file(env_file: str = ".env") -> str:
+def check_pw_vars(required_pw_vars: tuple[str, ...]) -> None:
     """
-    Reads the contents of a .env file and returns it as a string.
-    Uses the create_env_file function to create the .env file if it does not exist.
+    Checks if required password variables are available.
+    If not, generates them and adds them to the .env file.
 
-    :param env_file: Name of the .env file. Default = ".env"
-    :return: Contents of the .env file.
-    """
-    create_env_file(env_file)
-
-    with open(env_file, "r") as f:
-        env_vars = f.read()
-
-    return env_vars
-
-
-def check_pw_vars(env_vars: str, required_pw_vars: tuple) -> None:
-    """
-    Checks if required password variables are set in the .env file.
-    If not, adds them to the .env file.
-
-    :param env_vars: Contents of the .env file.
     :param required_pw_vars: Tuple of required password variables.
     :return: None
     """
-    # Check if required password variables are in the .env file
+    missing_vars = check_missing_vars(required_pw_vars)
+
+    if not missing_vars:
+        print("All required password variables are set.\n")
+        return
+
+    print("Generating missing password variables...")
     pw_vars = []
-    for var in required_pw_vars:
-        if var not in env_vars:
-            print(f"Generating password for {var}...")
-            password = generate_password()
-            line = f'{var}="{password}"\n'
-            pw_vars.append(line)
+    for var in missing_vars:
+        print(f"Generating password for {var}...")
+        password = generate_password()
+        pw_vars.append(f'{var}="{password}"\n')
 
-    # Add any missing variables to the .env file.
-    if pw_vars:
-        with open(".env", "a") as f:
-            f.writelines(pw_vars)
-        print("Passwords added to .env file.")
-    else:
-        print("All required passwords are present in the .env file.")
+    print("Writing password variables to .env file...")
+    with open(".env", "a") as f:
+        f.writelines(pw_vars)
+    print()
 
 
-def check_other_required_vars(env_vars: str, required_vars: tuple) -> None:
+def check_required_vars(required_vars: tuple[str, ...]) -> None:
     """
-    Checks if other required variables are set in the .env file.
-    If not, exit the program.
+    Checks if required variables are available and not empty.
+    If any variables are missing or empty print out the errors and exit the program.
 
-    :param env_vars: Contents of the .env file.
-    :param required_vars: Tuple of required  variables.
+    :param required_vars: Tuple of required variables.
     :return: None
     """
-    error = False
-    for var in required_vars:
-        if var not in env_vars:
-            print(f"ERROR: {var} is not set in the .env file.")
-            error = True
-
-    if error:
+    missing_vars = check_missing_vars(required_vars)
+    if missing_vars:
         sys.exit(1)
+
+    empty_vars = [var for var in required_vars if not os.environ.get(var)]
+    if empty_vars:
+        print("The following required variables are empty:")
+        for var in empty_vars:
+            print(f"\t- {var}")
+        sys.exit(1)
+
+    print("All required variables are set and not empty.")
 
 
 def main():
@@ -110,9 +104,8 @@ def main():
         "SOME_OTHER_VAR",
     )
 
-    env_vars = read_env_file()
-    check_pw_vars(env_vars, required_pw_vars)
-    check_other_required_vars(env_vars, required_vars)
+    check_pw_vars(required_pw_vars)
+    check_required_vars(required_vars)
 
 
 if __name__ == "__main__":
