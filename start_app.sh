@@ -6,7 +6,7 @@ python manage.py migrate  # Apply migrations to the database
 echo
 
 echo "Creating Superuser..."
-DJANGO_SUPERUSER_PASSWORD="DJANGO_SUPERUSER_PASSWORD" \
+DJANGO_SUPERUSER_PASSWORD="$DJANGO_SUPERUSER_PASSWORD" \
 python manage.py createsuperuser --noinput --username=admin --email=test@test.com
 echo
 
