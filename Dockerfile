@@ -44,9 +44,7 @@ USER appuser
 # Copy the source code into the container.
 COPY . .
 
-# Copy the entrypoint script and set permissions
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/start_app.sh
 
 EXPOSE 8000
 

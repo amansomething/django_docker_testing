@@ -2,6 +2,7 @@ import os
 import secrets
 import string
 import sys
+import subprocess
 
 from dotenv import load_dotenv
 
@@ -52,7 +53,6 @@ def check_pw_vars(required_pw_vars: tuple[str, ...]) -> None:
     missing_vars = check_missing_vars(required_pw_vars)
 
     if not missing_vars:
-        print("All required password variables are set.\n")
         return
 
     print("Generating missing password variables...")
@@ -93,7 +93,7 @@ def check_required_vars(required_vars: tuple[str, ...]) -> None:
 def main():
     required_pw_vars = (
         "DJANGO_SECRET_KEY",
-        "ANOTHER_SECRET_KEY",
+        "DJANGO_SUPERUSER_PASSWORD",
         "YET_ANOTHER_SECRET_KEY",
     )
     required_vars = (
@@ -108,3 +108,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # Run the command specified in the compose.yml file
+    command = sys.argv[1:]
+    if command:
+        subprocess.run(command)
