@@ -8,6 +8,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+REQUIRED_PW_VARS = (
+    "DJANGO_SECRET_KEY",
+    "DJANGO_SUPERUSER_PASSWORD",
+    "YET_ANOTHER_SECRET_KEY",
+)
+OTHER_REQUIRED_VARS = (
+    "DATABASE_URL",
+    "REDIS_URL",
+    "SOME_OTHER_VAR",
+)
+
 
 def generate_password(length: int = 64, special_chars: str = "!@#^*()") -> str:
     """
@@ -43,7 +54,7 @@ def check_missing_vars(vars_: tuple[str, ...]) -> list[str]:
     return missing_vars
 
 
-def check_pw_vars(required_pw_vars: tuple[str, ...]) -> None:
+def check_pw_vars(required_pw_vars: tuple[str, ...] = REQUIRED_PW_VARS) -> None:
     """
     Checks if required password variables are available.
     If not, generates them and adds them to the .env file.
@@ -69,7 +80,7 @@ def check_pw_vars(required_pw_vars: tuple[str, ...]) -> None:
     print()
 
 
-def check_required_vars(required_vars: tuple[str, ...]) -> None:
+def check_required_vars(required_vars: tuple[str, ...] = OTHER_REQUIRED_VARS) -> None:
     """
     Checks if required variables are available and not empty.
     If any variables are missing or empty print out the errors and exit the program.
@@ -91,24 +102,9 @@ def check_required_vars(required_vars: tuple[str, ...]) -> None:
     print("All required variables are set and not empty.")
 
 
-def main():
-    required_pw_vars = (
-        "DJANGO_SECRET_KEY",
-        "DJANGO_SUPERUSER_PASSWORD",
-        "YET_ANOTHER_SECRET_KEY",
-    )
-    required_vars = (
-        "DATABASE_URL",
-        "REDIS_URL",
-        "SOME_OTHER_VAR",
-    )
-
-    check_pw_vars(required_pw_vars)
-    check_required_vars(required_vars)
-
-
 if __name__ == "__main__":
-    main()
+    check_pw_vars()
+    check_required_vars()
 
     # Run the command specified in the compose.yml file
     command = sys.argv[1:]
