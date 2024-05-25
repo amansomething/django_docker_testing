@@ -9,3 +9,4 @@ services:
       - "8000:8000"
     entrypoint: ["python", "/app/entrypoint.py"]
     command: ["/bin/bash", "start_app.sh"]
+    stop_grace_period: 1s
