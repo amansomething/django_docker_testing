@@ -31,12 +31,13 @@ def check_missing_vars(vars_: tuple[str, ...]) -> list[str]:
     :param vars_: Tuple of required variables.
     :return: List of missing variables.
     """
-    missing_vars = [var for var in vars_ if var not in os.environ]
+    env_vars = os.environ.keys()
+    missing_vars = [var for var in vars_ if var not in env_vars]
 
     if missing_vars:
         print("The following required variables are missing:")
         for var in missing_vars:
-            print(f"\t- {var}")
+            print(f"- {var}")
         print()
 
     return missing_vars
