@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Prepping Django App..."
-python manage.py makemigrations dummy  # Create migrations for the dummy app
+python manage.py makemigrations dummy  # Ensure model updates are reflected in migrations
 python manage.py migrate  # Apply migrations to the database
 echo "Done!"
 echo

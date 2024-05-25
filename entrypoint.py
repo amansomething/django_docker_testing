@@ -25,6 +25,7 @@ class RequiredPW(BaseModel):
         RequiredPW(name="YET_ANOTHER_SECRET_KEY", special_chars="!@#^*()")
         RequiredPW(name="SuperCustom", length=128, special_chars="!")
     """
+
     name: str
     length: int = 64
     special_chars: str = "!@#^*()"
@@ -59,11 +60,12 @@ def generate_password(length: int = 64, special_chars: str = "") -> str:
 
 
 def check_pw_vars(
-        required_pw_vars: tuple[RequiredPW] = REQUIRED_PW_VARS, env_file: str = ENV_FILE
+    required_pw_vars: tuple[RequiredPW] = REQUIRED_PW_VARS, env_file: str = ENV_FILE
 ) -> None:
     """
     Checks if required password variables are loaded.
     If not, generates them and adds them to the .env file.
+    Adds new lines before/after the generated variables to prevent appending to the end of an existing line.
     Prints out status messages as it goes.
 
     :param required_pw_vars: Tuple of RequiredPW variables to check.
@@ -80,7 +82,7 @@ def check_pw_vars(
         return
 
     print("\nGenerating missing password variables...")
-    pw_vars = ["# Missing Required Passwords\n"]
+    pw_vars = ["\n# Missing Required Passwords\n"]
     for var in missing_vars:
         print(f"Generating password for {var.name}...")
         password = generate_password(var.length, var.special_chars)
@@ -94,13 +96,14 @@ def check_pw_vars(
 
 
 def check_required_vars(
-        required_vars: Union[list[str], tuple[str, ...]] = OTHER_REQUIRED_VARS,
-        env_file: str = ENV_FILE,
+    required_vars: Union[list[str], tuple[str, ...]] = OTHER_REQUIRED_VARS,
+    env_file: str = ENV_FILE,
 ) -> None:
     """
     Checks if required variables are available and not empty.
     If variable are missing:
         - Adds them to the .env file as empty strings.
+            - Adds new lines before/after the generated variables to prevent appending to the end of an existing line.
         - Prints out a message to fill them out.
         - Exits the program.
     If variables are empty strings, prints out the errors and exits the program.
@@ -121,6 +124,7 @@ def check_required_vars(
         required_vars = ["\n# Required Variables\n"]
         for var in missing_vars:
             required_vars.append(f'{var}=""\n')
+        required_vars.append("\n")
 
         with open(env_file, "a") as f:
             f.writelines(required_vars)
