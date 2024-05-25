@@ -38,13 +38,13 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
 
-# Switch to the non-privileged user to run the application.
-USER appuser
-
 # Copy the source code into the container.
 COPY . .
 
 RUN chmod +x /app/start_app.sh
+
+# Switch to the non-privileged user to run the application.
+USER appuser
 
 EXPOSE 8000
 
