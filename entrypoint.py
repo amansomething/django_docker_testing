@@ -3,15 +3,20 @@ import secrets
 import string
 import sys
 import subprocess
+from typing import NamedTuple
+from collections import namedtuple
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
+
+RequiredPW = namedtuple("RequiredPW", ["var", "length", "special_chars"])
+
 REQUIRED_PW_VARS = (
-    "DJANGO_SECRET_KEY",
-    "DJANGO_SUPERUSER_PASSWORD",
-    "YET_ANOTHER_SECRET_KEY",
+    RequiredPWVar("DJANGO_SECRET_KEY", 0),
+    RequiredPWVar("DJANGO_SUPERUSER_PASSWORD", 16),
+    RequiredPWVar("YET_ANOTHER_SECRET_KEY", 0),
 )
 OTHER_REQUIRED_VARS = (
     "DATABASE_URL",
@@ -80,7 +85,7 @@ def check_pw_vars(required_pw_vars: tuple[str, ...] = REQUIRED_PW_VARS) -> None:
     print()
 
 
-def check_required_vars(required_vars: tuple[str, ...] = OTHER_REQUIRED_VARS) -> None:
+def check_required_vars(required_vars: tuple[tuple[str, int], ...] = OTHER_REQUIRED_VARS) -> None:
     """
     Checks if required variables are available and not empty.
     If any variables are missing or empty print out the errors and exit the program.
