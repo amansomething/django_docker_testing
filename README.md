@@ -9,3 +9,5 @@ Run with:
 touch .env
 docker-compose up
 ```
+
+Test
